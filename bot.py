@@ -1,8 +1,6 @@
 from telegram import Update, ChatMember
 from telegram.ext import ApplicationBuilder, MessageHandler, ChatMemberHandler, filters, ContextTypes
 
-ADMIN_ID =  -1002380940208 # Sizning Telegram ID'ingiz
-
 def load_bad_words():
     with open("badwords.txt", "r", encoding="utf-8") as f:
         return [line.strip().lower() for line in f if line.strip()]
@@ -15,32 +13,18 @@ async def check_bad_words(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     text = update.message.text.lower()
     if any(bad_word in text for bad_word in BAD_WORDS):
-        user = update.message.from_user
-        chat_type = update.message.chat.type
-
-        # Avval xabar yuborish
-        await context.bot.send_message(chat_id=update.message.chat_id, text="⚠️ Iltimos, so'kinmang!")
-
-        # Log adminga
-        log_msg = (
-            f"🚨 So'kinish aniqlandi!\n"
-            f"👤 Foydalanuvchi: {user.full_name} (@{user.username})\n"
-            f"📢 Chat turi: {chat_type}\n"
-            f"📝 Xabar: {update.message.text}"
+        await context.bot.send_message(
+            chat_id=update.message.chat_id,
+            text="⚠️iltimos sokinmang undan kora odobli 🧕🏻 qiz va bola boling✅"
         )
-        try:
-            await context.bot.send_message(chat_id=ADMIN_ID, text=log_msg)
-        except Exception as e:
-            print(f"Admin log yuborishda xato: {e}")
 
-        # Keyin xabarni o'chirish
         try:
             await update.message.delete()
         except:
             pass
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Salom! Men Sokmang botman! Endi guruh va kanallarda ham ishlayman.")
+    await update.message.reply_text("Salom! Men Sokmang botman! Endi log yozmayman, faqat ogohlantiraman.")
 
 async def bot_added(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.my_chat_member.chat
@@ -71,5 +55,5 @@ def main():
     print("Bot ishga tushdi...")
     app.run_polling()
 
-if name == "main":
+if __name__ == "__main__":
     main()
